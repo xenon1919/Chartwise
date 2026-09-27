@@ -50,6 +50,23 @@ Without a key the app uses the offline demo engine. The **Auto / AI / Demo** swi
 npm start          # builds the client; the gateway serves it at http://localhost:5050
 ```
 
+### Docker
+
+```bash
+docker build -t chartwise .
+docker run -p 5050:5050 --env-file .env -v chartwise-data:/app/engine/storage chartwise
+```
+
+Open **http://localhost:5050**. The volume keeps uploaded datasets between restarts.
+
+### CI/CD
+
+`.github/workflows/ci.yml` runs on every push and pull request to `main`:
+
+1. Engine tests, a gateway check, a web app build and an end-to-end smoke test.
+2. It builds the Docker image and smoke-tests the running container.
+3. On pushes to `main` and on `v*` tags, it publishes the image to GitHub Container Registry (`ghcr.io/<owner>/<repo>`).
+
 ## Configuration (`.env`)
 
 | Variable | Default | Purpose |

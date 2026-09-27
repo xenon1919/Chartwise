@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import time
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -20,7 +21,13 @@ from .datasets import get_registry  # noqa: E402
 from .heuristic import DemoEngine  # noqa: E402
 from .safety import UnsafeQueryError  # noqa: E402
 
-app = FastAPI(title="Chartwise engine", version="1.0.0")
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    get_registry()  # load samples and profiles before the first request
+    yield
+
+
+app = FastAPI(title="Chartwise engine", version="1.0.0", lifespan=lifespan)
 demo_engine = DemoEngine()
 _claude: llm.ClaudeEngine | None = None
 MAX_UPLOAD_BYTES = 50 * 1024 * 1024
@@ -62,9 +69,6 @@ class ConnectBody(BaseModel):
     name: str | None = None
 
 
-@app.on_event("startup")
-def warm() -> None:
-    get_registry()
 
 
 @app.get("/health")

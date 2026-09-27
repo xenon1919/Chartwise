@@ -1,0 +1,13 @@
+**/node_modules
+**/__pycache__
+**/*.pyc
+.git
+.github
+.env
+.env.*
+!.env.example
+client/dist
+engine/.venv
+engine/storage
+server/data
+*.log
