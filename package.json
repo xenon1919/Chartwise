@@ -1,0 +1,15 @@
+{
+  "name": "chat-with-your-data-copilot",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Chartwise — connect a CSV or database, ask questions in plain English, get a chart + the generated SQL.",
+  "scripts": {
+    "setup": "node scripts/setup.mjs",
+    "dev": "concurrently -k -n engine,server,client -c cyan,magenta,green \"node scripts/engine.mjs --reload\" \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
+    "build": "npm --prefix client run build",
+    "start": "npm run build && concurrently -k -n engine,server -c cyan,magenta \"node scripts/engine.mjs\" \"npm --prefix server start\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
